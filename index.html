@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Portafolio de Bossio Mauro — Paso 1</title>
+  <style>
+    /* ====== Estilos mínimos, claros y comentados ====== */
+    :root{
+      --bg:#0b0c10;      /* fondo oscuro suave */
+      --panel:#12151b;   /* paneles/cards */
+      --text:#e8eef2;    /* texto principal */
+      --muted:#9fb0bf;   /* texto secundario */
+      --brand:#4fd1c5;   /* acento */
+      --line:#222832;    /* bordes */
+    }
+    *{ box-sizing: border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text); background: var(--bg);
+    }
+    .container{ max-width: 980px; margin: 0 auto; padding: 24px; }
+    header{
+      padding: 24px; border-bottom:1px solid var(--line); position: sticky; top:0; backdrop-filter: blur(6px);
+      background: linear-gradient(0deg, transparent, rgba(11,12,16,0.75));
+    }
+    header .title{ font-size: clamp(20px, 4vw, 28px); font-weight: 700; }
+    header nav{ margin-top: 12px; display: flex; gap: 12px; flex-wrap: wrap; }
+    header a{ color: var(--muted); text-decoration: none; border:1px solid var(--line); padding:8px 12px; border-radius: 10px; }
+    header a:hover{ color: var(--text); border-color: var(--brand); }
+
+    .hero{ margin-top: 24px; padding: 24px; border:1px solid var(--line); border-radius: 16px; background: var(--panel); }
+    .row{ display:grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 720px){ .row{ grid-template-columns: 1.2fr 0.8fr; } }
+
+    .pill{ display:inline-flex; gap:8px; align-items:center; border:1px solid var(--line); padding:6px 10px; border-radius: 999px; color: var(--muted); }
+    .skills{ display:flex; flex-wrap: wrap; gap:8px; margin-top: 12px; }
+
+    h2{ margin: 26px 0 12px; font-size: 20px; }
+    p.muted{ color: var(--muted); }
+
+    .grid{ display:grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 900px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
+
+    .card{ background: var(--panel); border:1px solid var(--line); border-radius: 14px; padding: 16px; }
+    .card h3{ margin: 0 0 8px; font-size: 18px; }
+    .tag{ display:inline-block; border:1px solid var(--line); border-radius: 999px; padding: 2px 8px; font-size: 12px; color: var(--muted); }
+    .card .tags{ display:flex; flex-wrap: wrap; gap:6px; margin-top: 8px; }
+
+    .actions{ display:flex; gap:10px; margin-top: 12px; }
+    .btn{ background: transparent; color: var(--text); border:1px solid var(--line); border-radius: 10px; padding:8px 12px; text-decoration: none; font-size: 14px; }
+    .btn:hover{ border-color: var(--brand); }
+
+    footer{ margin: 40px 0 20px; color: var(--muted); text-align:center; font-size: 14px; }
+
+    /* Modal de contacto muy simple */
+    dialog{ border:1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 12px; padding: 0; }
+    .modal-header{ padding: 14px 16px; border-bottom:1px solid var(--line); display:flex; justify-content: space-between; align-items:center; }
+    .modal-body{ padding: 16px; }
+    .field{ display:grid; gap:6px; margin-bottom: 12px; }
+    input, textarea{ background: #0e131a; border:1px solid var(--line); color: var(--text); border-radius: 10px; padding: 10px; }
+    textarea{ min-height: 100px; }
+    .modal-actions{ display:flex; justify-content: flex-end; gap:10px; padding: 0 16px 16px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="title">Portafolio de Bossio Mauro — Paso 1</div>
+      <nav>
+        <a href="#sobre-mi">Sobre mí</a>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#contacto" id="contactLink">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- ====== HERO / SOBRE MI ====== -->
+    <section id="sobre-mi" class="hero">
+      <div class="row">
+        <div>
+          <div class="pill">Córdoba, Argentina • Disponible</div>
+          <h1 style="margin: 12px 0 8px; font-size: 28px;">Mauro Bossio</h1>
+          <p class="muted">Estudiante de Ingeniería en Sistemas • </p>
+          <p style="margin-top: 12px;">Me gusta construir cosas útiles con tecnología  Este portafolio está hecho <strong>solo con HTML, CSS y JavaScript</strong> para aprender paso a paso.</p>
+          <div class="skills" id="skills"></div>
+        </div>
+        <div>
+          <div class="card">
+            <h3>Datos rápidos</h3>
+            <ul style="margin:0; padding-left: 18px; line-height: 1.7;">
+              <li>Email: <a href="mailto:maurobossio@outlook.com.ar" style="color:var(--brand)">maurobossio@outlook.com.ar</a></li>
+              <li>GitHub: <a href="https://github.com/mauroBossio?tab=repositories" style="color:var(--brand)">mauroBossio</a></li>
+              <li>LinkedIn: <a href="https://www.linkedin.com/in/maurobossio/" style="color:var(--brand)">Mauro Bossio</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====== PROYECTOS ====== -->
+    <section id="proyectos" style="margin-top: 24px;">
+      <h2>Proyectos</h2>
+      <p class="muted">Listado generado desde un <strong>array de objetos en JavaScript</strong> (primer paso hacia datos dinámicos).</p>
+      <div class="grid" id="projects"></div>
+    </section>
+
+    <!-- ====== CONTACTO (modal) ====== -->
+    <section id="contacto" style="margin-top: 24px;">
+      <h2>Contacto</h2>
+      <p class="muted">Por ahora, el formulario solo simula un envío y muestra datos por consola.</p>
+      <button class="btn" id="openModal">Escribime</button>
+    </section>
+
+    <footer>© <span id="year"></span> Mauro. Hecho con HTML + CSS + JS (paso 1).</footer>
+  </main>
+
+  <!-- Modal nativo <dialog> (sin librerías) -->
+  <dialog id="contactModal">
+    <div class="modal-header">
+      <strong>Contacto</strong>
+      <button class="btn" id="closeModal">Cerrar</button>
+    </div>
+    <form method="dialog" id="contactForm">
+      <div class="modal-body">
+        <div class="field">
+          <label for="name">Nombre</label>
+          <input id="name" name="name" required />
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" required />
+        </div>
+        <div class="field">
+          <label for="body">Mensaje</label>
+          <textarea id="body" name="body" required></textarea>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" value="cancel">Cancelar</button>
+        <button class="btn" value="submit" id="sendBtn">Enviar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    // ====== JS básico y comentado ======
+
+    // 1) Datos simples: array de skills y de proyectos (JSON mínimo)
+    const skills = ["HTML", "CSS", "JavaScript (básico)", "Python (básico)" ];
+
+    const projects = [
+      {
+        title: "Landing simple",
+        description: "Página estática con HTML y CSS responsivo.",
+        tags: ["HTML", "CSS"],
+        year: "2025",
+        link: "#",
+        repo: "#"
+      },
+      {
+        title: "Mini calculadora",
+        description: "Pequeña app JS con eventos y DOM.",
+        tags: ["JavaScript"],
+        year: "2025",
+        link: "#",
+        repo: "#"
+      },
+      {
+        title: "Dashboard básico",
+        description: "Maquetado de tarjetas + tipografías.",
+        tags: ["HTML", "CSS"],
+        year: "2024",
+        link: "#",
+        repo: "#"
+      }
+    ];
+
+    // 2) Render simple de skills y proyectos
+    function renderSkills(){
+      const $skills = document.getElementById('skills');
+      $skills.innerHTML = skills.map(s => `<span class="pill">${s}</span>`).join('');
+    }
+
+    function renderProjects(){
+      const $grid = document.getElementById('projects');
+      $grid.innerHTML = projects.map(p => `
+        <article class="card">
+          <h3>${p.title}</h3>
+          <p class="muted">${p.description}</p>
+          <div class="tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+          <div class="actions">
+            <a class="btn" href="${p.link}">Ver</a>
+            <a class="btn" href="${p.repo}">Repo</a>
+            <span class="muted" style="margin-left:auto;">${p.year}</span>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // 3) Modal de contacto (nativo con <dialog>)
+    const modal = document.getElementById('contactModal');
+    const openBtn = document.getElementById('openModal');
+    const closeBtn = document.getElementById('closeModal');
+    const contactLink = document.getElementById('contactLink');
+
+    openBtn.addEventListener('click', () => modal.showModal());
+    closeBtn.addEventListener('click', () => modal.close());
+    contactLink.addEventListener('click', (e)=>{ e.preventDefault(); modal.showModal(); });
+
+    // 4) Manejo del envío (solo consola por ahora)
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', (e) => {
+      e.preventDefault(); // prevenimos cierre automático del dialog
+      const data = Object.fromEntries(new FormData(form));
+      console.log("[Simulación de envío] Datos del formulario:", data);
+      alert("¡Gracias! (Por ahora solo simulamos el envío y registramos en consola)");
+      form.reset();
+      modal.close();
+    });
+
+    // 5) Footer dinámico (año actual)
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Inicializamos todo
+    renderSkills();
+    renderProjects();
+  </script>
+</body>
+</html>
