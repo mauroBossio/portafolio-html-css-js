@@ -1,98 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Portafolio de Bossio Mauro</title>
-  <link rel="stylesheet" href="/css/style.css" />
-</head>
-<body>
-  <header>
-    <div class="container">
-      <div class="title">Portafolio de Bossio Mauro</div>
-      <nav>
-        <a href="#sobre-mi">Sobre mí</a>
-        <a href="#proyectos">Proyectos</a>
-        <a href="#contacto" id="contactLink">Contacto</a>
-      </nav>
-    </div>
-  </header>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portafolio de Bossio Mauro</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="title">Portafolio de Bossio Mauro</div>
+        <nav>
+          <a href="#sobre-mi">Sobre mí</a>
+          <a href="#proyectos">Proyectos</a>
+          <a href="#contacto" id="contactLink">Contacto</a>
+        </nav>
+      </div>
+    </header>
 
-  <main class="container">
-    <!-- ====== HERO / SOBRE MI ====== -->
-    <section id="sobre-mi" class="hero">
-      <div class="row">
-        <div>
-          <div class="pill">Córdoba, Argentina • Disponible</div>
-          <h1 style="margin: 12px 0 8px; font-size: 28px;">Mauro Bossio</h1>
-          <p class="muted">Estudiante de Ingeniería en Sistemas • </p>
-          <p style="margin-top: 12px;">Me gusta construir cosas útiles con tecnología  Este portafolio está hecho <strong>solo con HTML, CSS y JavaScript</strong> para aprender paso a paso.</p>
-          <div class="skills" id="skills"></div>
-        </div>
-        <div>
-          <div class="card">
-            <h3>Datos rápidos</h3>
-            <ul style="margin:0; padding-left: 18px; line-height: 1.7;">
-              <li>Email: <a href="mailto:maurobossio@outlook.com.ar" style="color:var(--brand)">maurobossio@outlook.com.ar</a></li>
-              <li>GitHub: <a href="https://github.com/mauroBossio?tab=repositories" style="color:var(--brand)">mauroBossio</a></li>
-              <li>LinkedIn: <a href="https://www.linkedin.com/in/maurobossio/" style="color:var(--brand)">Mauro Bossio</a></li>
-            </ul>
+    <main class="container">
+      <!-- ====== HERO / SOBRE MI ====== -->
+      <section id="sobre-mi" class="hero">
+        <div class="row">
+          <div>
+            <div class="pill">Córdoba, Argentina • Disponible</div>
+            <h1 style="margin: 12px 0 8px; font-size: 28px">Mauro Bossio</h1>
+            <div class="social-links">
+              <a
+                href="https://github.com/mauroBossio"
+                target="_blank"
+                class="github"
+                ><img src="img/github.png" alt="GitHub"
+              /></a>
+              <a
+                href="https://www.linkedin.com/in/maurobossio"
+                target="_blank"
+                class="linkedin"
+                ><img src="img/linkedin.png" alt="LinkedIn"
+              /></a>
+            </div>
+            <p class="muted">Estudiante de Ingeniería en Sistemas •</p>
+            <p style="margin-top: 12px">
+              Estudiante autodidacta en desarrollo web
+              <strong>con tecnologías como HTML, CSS y JavaScript</strong> con
+              nivel básico y en proceso de aprendizaje de Python y bases de
+              datos.
+            </p>
+            <div class="skills" id="skills"></div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Filtros por tags -->
-    <section id="filtros" style="margin-top: 16px;">
-      <h2 style="margin-bottom:8px;">Filtrar por tags</h2>
-      <div class="filters" id="filters"></div>
-    </section>
-
-    <!-- ====== PROYECTOS ====== -->
-    <section id="proyectos" style="margin-top: 24px;">
-      <h2>Proyectos</h2>
-      <p class="muted">Listado generado desde un <strong>array de objetos en JavaScript</strong> (primer paso hacia datos dinámicos).</p>
-      <div class="grid" id="projects"></div>
-    </section>
-
-    <!-- ====== CONTACTO (modal) ====== -->
-    <section id="contacto" style="margin-top: 24px;">
-      <h2>Contacto</h2>
-      <p class="muted">Por ahora, el formulario solo simula un envío y muestra datos por consola.</p>
-      <button class="btn" id="openModal">Escribime</button>
-    </section>
-
-    <footer>© <span id="year"></span> Mauro. Hecho con HTML + CSS + JS (paso 1).</footer>
-  </main>
-
-  <!-- Modal nativo <dialog> (sin librerías) -->
-  <dialog id="contactModal">
-    <div class="modal-header">
-      <strong>Contacto</strong>
-      <button class="btn" id="closeModal">Cerrar</button>
-    </div>
-    <form method="dialog" id="contactForm">
-      <div class="modal-body">
-        <div class="field">
-          <label for="name">Nombre</label>
-          <input id="name" name="name" required />
+      <!-- Filtros por tags -->
+      <section id="filtros" style="margin-top: 16px">
+        <h2 style="margin-bottom: 8px">Filtrar por tags</h2>
+        <!-- 🔎 Buscador -->
+        <div class="searchbar">
+          <input
+            id="search"
+            type="search"
+            placeholder="Buscar proyectos por título o descripción..."
+            autocomplete="off"
+          />
+          <button id="clearSearch" title="Limpiar búsqueda">✕</button>
         </div>
-        <div class="field">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" required />
-        </div>
-        <div class="field">
-          <label for="body">Mensaje</label>
-          <textarea id="body" name="body" required></textarea>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button class="btn" value="cancel">Cancelar</button>
-        <button class="btn" value="submit" id="sendBtn">Enviar</button>
-      </div>
-    </form>
-  </dialog>
-  <script src="js/main.js"></script>
+        <div class="filters" id="filters"></div>
+      </section>
 
-</body>
+      <!-- ====== PROYECTOS ====== -->
+      <section id="proyectos" style="margin-top: 24px">
+        <h2>Proyectos</h2>
+        <p class="muted">
+          Listado generado desde un
+          <strong>array de objetos en JavaScript</strong> (primer paso hacia
+          datos dinámicos).
+        </p>
+        <div class="grid" id="projects"></div>
+      </section>
+
+      <!-- ====== CONTACTO (modal) ====== -->
+      <section id="contacto" style="margin-top: 24px">
+        <h2>Contacto</h2>
+        <p class="muted">
+          Por ahora, el formulario solo simula un envío y muestra datos por
+          consola.
+        </p>
+        <button class="btn" id="openModal">Escribime</button>
+      </section>
+
+      <footer>
+        © <span id="year"></span> Mauro. Hecho con HTML + CSS + JS (paso 1).
+      </footer>
+    </main>
+
+    <!-- Modal nativo <dialog> (sin librerías) -->
+    <dialog id="contactModal">
+      <div class="modal-header">
+        <strong>Contacto</strong>
+        <button class="btn" id="closeModal">Cerrar</button>
+      </div>
+      <form method="dialog" id="contactForm">
+        <div class="modal-body">
+          <div class="field">
+            <label for="name">Nombre</label>
+            <input id="name" name="name" required />
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required />
+          </div>
+          <div class="field">
+            <label for="body">Mensaje</label>
+            <textarea id="body" name="body" required></textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn" value="cancel">Cancelar</button>
+          <button class="btn" value="submit" id="sendBtn">Enviar</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="js/main.js"></script>
+  </body>
 </html>

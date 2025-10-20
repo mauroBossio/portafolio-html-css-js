@@ -2,62 +2,81 @@
 // 1) Datos simples: array de skills y de proyectos (JSON mínimo)
 const skills = ["HTML", "CSS", "JavaScript (básico)", "Python (básico)"];
 
-const projects = [
-    {
-        title: "Landing simple",
-        description: "Página estática con HTML y CSS responsivo.",
-        tags: ["HTML", "CSS"],
-        year: "2025",
-        link: "#",
-        repo: "#"
-    },
-    {
-        title: "Mini calculadora",
-        description: "Pequeña app JS con eventos y DOM.",
-        tags: ["JavaScript"],
-        year: "2025",
-        link: "#",
-        repo: "#"
-    },
-    {
-        title: "Dashboard básico",
-        description: "Maquetado de tarjetas + tipografías.",
-        tags: ["HTML", "CSS"],
-        year: "2024",
-        link: "#",
-        repo: "#"
+let projects = []; // ahora vacío
+let searchQuery = "";
+
+// Carga los proyectos desde el JSON
+
+
+async function loadProjects() {
+    try {
+        const res = await fetch("data/projects.json");
+        if (!res.ok) throw new Error("Error al cargar el archivo JSON");
+        projects = await res.json();
+        renderFilters();   // reconstruye la barra de filtros
+        renderProjects();  // muestra la grilla
+    } catch (err) {
+        console.error(err);
+        document.getElementById("projects").innerHTML =
+            `<div class="empty">Error cargando proyectos 😞</div>`;
     }
-];
+}
 
 // === Filtros por tags ===
 const ALL = "Todos";
 let activeTag = ALL;
 
 function getAllTags() {
-  // Une todos los arrays de tags y quita repetidos
-  const tags = projects.flatMap(p => p.tags || []);
-  return [ALL, ...Array.from(new Set(tags))];
+    // Une todos los arrays de tags y quita repetidos
+    const tags = projects.flatMap(p => p.tags || []);
+    return [ALL, ...Array.from(new Set(tags))];
 }
 
 function renderFilters() {
-  const $filters = document.getElementById('filters');
-  const tags = getAllTags();
+    const $filters = document.getElementById('filters');
+    const tags = getAllTags();
 
-  $filters.innerHTML = tags.map(tag => `
+    $filters.innerHTML = tags.map(tag => `
     <button class="filter-btn ${tag === activeTag ? 'active' : ''}" data-tag="${tag}">
       ${tag}
     </button>
   `).join('');
 
-  // Listeners por cada botón
-  $filters.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeTag = btn.dataset.tag;
-      renderFilters();   // vuelve a pintar para actualizar "active"
-      renderProjects();  // muestra proyectos filtrados
+    // Listeners por cada botón
+    $filters.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            activeTag = btn.dataset.tag;
+            renderFilters();   // vuelve a pintar para actualizar "active"
+            renderProjects();  // muestra proyectos filtrados
+        });
     });
-  });
 }
+
+// === Buscador por texto ===
+const $search = document.getElementById('search');
+const $clearSearch = document.getElementById('clearSearch');
+
+function normalize(txt) {
+    return (txt || "").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
+}
+
+// (Opcional) pequeño debounce para no re-renderizar en cada tecla
+let t;
+$search.addEventListener('input', () => {
+    clearTimeout(t);
+    t = setTimeout(() => {
+        searchQuery = $search.value;
+        renderProjects();
+    }, 120);
+});
+
+$clearSearch.addEventListener('click', () => {
+    $search.value = "";
+    searchQuery = "";
+    renderProjects();
+    $search.focus();
+});
+
 
 
 // 2) Render simple de skills y proyectos
@@ -66,24 +85,36 @@ function renderSkills() {
     $skills.innerHTML = skills.map(s => `<span class="pill">${s}</span>`).join('');
 }
 
-function renderProjects(){
-  const $grid = document.getElementById('projects');
+function renderProjects() {
+    const $grid = document.getElementById('projects');
 
-  // Filtrado por tag activo
-  const filtered = (activeTag === ALL)
-    ? projects
-    : projects.filter(p => (p.tags || []).includes(activeTag));
+    // 1) Filtrar por tag
+    let filtered = (activeTag === ALL)
+        ? projects
+        : projects.filter(p => (p.tags || []).includes(activeTag));
 
-  if (filtered.length === 0) {
-    $grid.innerHTML = `<div class="empty">No hay proyectos para el filtro: <strong>${activeTag}</strong>.</div>`;
-    return;
-  }
+    // 2) Filtrar por texto (título o descripción)
+    const q = normalize(searchQuery);
+    if (q) {
+        filtered = filtered.filter(p => {
+            const title = normalize(p.title);
+            const desc = normalize(p.description);
+            return title.includes(q) || desc.includes(q);
+        });
+    }
 
-  $grid.innerHTML = filtered.map(p => `
+    if (filtered.length === 0) {
+        $grid.innerHTML = `<div class="empty">
+      No hay proyectos ${q ? `para “<strong>${searchQuery}</strong>”` : ""} con el filtro: <strong>${activeTag}</strong>.
+    </div>`;
+        return;
+    }
+
+    $grid.innerHTML = filtered.map(p => `
     <article class="card">
       <h3>${p.title}</h3>
       <p class="muted">${p.description}</p>
-      <div class="tags">${(p.tags || []).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="tags">${(p.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
       <div class="actions">
         <a class="btn" href="${p.link}">Ver</a>
         <a class="btn" href="${p.repo}">Repo</a>
@@ -92,6 +123,7 @@ function renderProjects(){
     </article>
   `).join('');
 }
+
 
 // 3) Modal de contacto (nativo con <dialog>)
 const modal = document.getElementById('contactModal');
@@ -117,7 +149,35 @@ form.addEventListener('submit', (e) => {
 // 5) Footer dinámico (año actual)
 document.getElementById('year').textContent = new Date().getFullYear();
 
+// ====== Header auto-ocultable ======
+const header = document.querySelector("header");
+let lastScrollY = window.scrollY;
+
+window.addEventListener("scroll", () => {
+    const currentY = window.scrollY;
+
+    // Mostrar siempre si estamos arriba
+    if (currentY < 50) {
+        header.classList.remove("hide", "scrolled");
+        return;
+    }
+
+    // Aplicar una leve sombra cuando hay scroll
+    header.classList.add("scrolled");
+
+    if (currentY > lastScrollY) {
+        // Scrolleando hacia abajo -> ocultar
+        header.classList.add("hide");
+    } else {
+        // Scrolleando hacia arriba -> mostrar
+        header.classList.remove("hide");
+    }
+
+    lastScrollY = currentY;
+});
+
+
+
 // Inicializamos todo
 renderSkills();
-renderFilters();
-renderProjects();
+loadProjects();
