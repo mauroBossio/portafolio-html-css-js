@@ -229,3 +229,31 @@ textarea {
     gap: 10px;
     padding: 0 16px 16px;
 }
+
+.filters{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin: 8px 0 16px;
+}
+.filter-btn{
+  background: transparent;
+  color: var(--muted);
+  border:1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor:pointer;
+  font-size: 14px;
+}
+.filter-btn:hover{ border-color: var(--brand); color: var(--text); }
+.filter-btn.active{
+  border-color: var(--brand);
+  box-shadow: 0 0 0 2px rgba(79,209,197,0.15) inset;
+  color: var(--text);
+}
+.empty{
+  color: var(--muted);
+  font-style: italic;
+  border:1px dashed var(--line);
+  border-radius: 12px;
+  padding: 14px;
+  text-align:center;
+}

@@ -29,26 +29,68 @@ const projects = [
     }
 ];
 
+// === Filtros por tags ===
+const ALL = "Todos";
+let activeTag = ALL;
+
+function getAllTags() {
+  // Une todos los arrays de tags y quita repetidos
+  const tags = projects.flatMap(p => p.tags || []);
+  return [ALL, ...Array.from(new Set(tags))];
+}
+
+function renderFilters() {
+  const $filters = document.getElementById('filters');
+  const tags = getAllTags();
+
+  $filters.innerHTML = tags.map(tag => `
+    <button class="filter-btn ${tag === activeTag ? 'active' : ''}" data-tag="${tag}">
+      ${tag}
+    </button>
+  `).join('');
+
+  // Listeners por cada botón
+  $filters.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeTag = btn.dataset.tag;
+      renderFilters();   // vuelve a pintar para actualizar "active"
+      renderProjects();  // muestra proyectos filtrados
+    });
+  });
+}
+
+
 // 2) Render simple de skills y proyectos
 function renderSkills() {
     const $skills = document.getElementById('skills');
     $skills.innerHTML = skills.map(s => `<span class="pill">${s}</span>`).join('');
 }
 
-function renderProjects() {
-    const $grid = document.getElementById('projects');
-    $grid.innerHTML = projects.map(p => `
-        <article class="card">
-          <h3>${p.title}</h3>
-          <p class="muted">${p.description}</p>
-          <div class="tags">${p.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
-          <div class="actions">
-            <a class="btn" href="${p.link}">Ver</a>
-            <a class="btn" href="${p.repo}">Repo</a>
-            <span class="muted" style="margin-left:auto;">${p.year}</span>
-          </div>
-        </article>
-      `).join('');
+function renderProjects(){
+  const $grid = document.getElementById('projects');
+
+  // Filtrado por tag activo
+  const filtered = (activeTag === ALL)
+    ? projects
+    : projects.filter(p => (p.tags || []).includes(activeTag));
+
+  if (filtered.length === 0) {
+    $grid.innerHTML = `<div class="empty">No hay proyectos para el filtro: <strong>${activeTag}</strong>.</div>`;
+    return;
+  }
+
+  $grid.innerHTML = filtered.map(p => `
+    <article class="card">
+      <h3>${p.title}</h3>
+      <p class="muted">${p.description}</p>
+      <div class="tags">${(p.tags || []).map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="actions">
+        <a class="btn" href="${p.link}">Ver</a>
+        <a class="btn" href="${p.repo}">Repo</a>
+        <span class="muted" style="margin-left:auto;">${p.year}</span>
+      </div>
+    </article>
+  `).join('');
 }
 
 // 3) Modal de contacto (nativo con <dialog>)
@@ -77,4 +119,5 @@ document.getElementById('year').textContent = new Date().getFullYear();
 
 // Inicializamos todo
 renderSkills();
+renderFilters();
 renderProjects();
