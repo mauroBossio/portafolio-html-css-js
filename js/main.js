@@ -153,6 +153,25 @@ document.getElementById('year').textContent = new Date().getFullYear();
 const header = document.querySelector("header");
 let lastScrollY = window.scrollY;
 
+// ====== Botón "ir arriba" ======
+const backToTop = document.getElementById('backToTop');
+
+function toggleBackToTop() {
+    if (window.scrollY > 300) { // aparece al bajar un poco
+        backToTop?.classList.add('show');
+    } else {
+        backToTop?.classList.remove('show');
+    }
+}
+
+backToTop?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+window.addEventListener('scroll', toggleBackToTop);
+toggleBackToTop(); // estado inicial
+
+
 window.addEventListener("scroll", () => {
     const currentY = window.scrollY;
 
