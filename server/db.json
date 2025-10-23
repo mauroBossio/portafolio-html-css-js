@@ -1,0 +1,29 @@
+{
+  "projects": [
+    {
+      "title": "Landing simple",
+      "description": "Página estática con HTML y CSS responsivo.",
+      "tags": ["HTML", "CSS"],
+      "year": "2025",
+      "link": "#",
+      "repo": "#"
+    },
+    {
+      "title": "Mini calculadora",
+      "description": "Pequeña app JS con eventos y DOM.",
+      "tags": ["JavaScript"],
+      "year": "2025",
+      "link": "#",
+      "repo": "#"
+    },
+    {
+      "title": "Dashboard básico",
+      "description": "Maquetado de tarjetas + tipografías.",
+      "tags": ["HTML", "CSS"],
+      "year": "2024",
+      "link": "#",
+      "repo": "#"
+    }
+  ],
+  "messages": []
+}

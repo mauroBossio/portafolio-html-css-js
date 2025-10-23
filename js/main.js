@@ -1,6 +1,9 @@
 
 // 1) Datos simples: array de skills y de proyectos (JSON mínimo)
 const skills = ["HTML", "CSS", "JavaScript (básico)", "Python (básico)"];
+const API = "http://localhost:4000/api";
+
+
 
 let projects = []; // ahora vacío
 let searchQuery = "";
@@ -10,8 +13,8 @@ let searchQuery = "";
 
 async function loadProjects() {
     try {
-        const res = await fetch("data/projects.json");
-        if (!res.ok) throw new Error("Error al cargar el archivo JSON");
+        const res = await fetch(`${API}/projects`);
+        if (!res.ok) throw new Error("Error al cargar proyectos");
         projects = await res.json();
         renderFilters();   // reconstruye la barra de filtros
         renderProjects();  // muestra la grilla
@@ -137,14 +140,40 @@ contactLink.addEventListener('click', (e) => { e.preventDefault(); modal.showMod
 
 // 4) Manejo del envío (solo consola por ahora)
 const form = document.getElementById('contactForm');
-form.addEventListener('submit', (e) => {
-    e.preventDefault(); // prevenimos cierre automático del dialog
-    const data = Object.fromEntries(new FormData(form));
-    console.log("[Simulación de envío] Datos del formulario:", data);
-    alert("¡Gracias! (Por ahora solo simulamos el envío y registramos en consola)");
-    form.reset();
-    modal.close();
+const statusEl = document.getElementById('formStatus');
+
+
+form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    statusEl.textContent = "Enviando…";
+
+    try {
+        const fd = new FormData(form);
+        const payload = Object.fromEntries(fd);
+
+        const res = await fetch(`${API}/contact`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: payload.name,
+                email: payload.email,
+                message: payload.message || payload.body
+            }),
+        });
+
+        if (res.ok) {
+            statusEl.textContent = "¡Gracias! Tu mensaje fue enviado ✅";
+            form.reset();
+            setTimeout(() => { statusEl.textContent = ""; modal?.close(); }, 900);
+        } else {
+            const info = await res.json().catch(() => null);
+            statusEl.textContent = info?.error || "No se pudo enviar. Probá más tarde.";
+        }
+    } catch {
+        statusEl.textContent = "Error de red. Verificá tu conexión.";
+    }
 });
+
 
 // 5) Footer dinámico (año actual)
 document.getElementById('year').textContent = new Date().getFullYear();
