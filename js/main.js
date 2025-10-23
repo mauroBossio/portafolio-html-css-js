@@ -1,12 +1,23 @@
 
 // 1) Datos simples: array de skills y de proyectos (JSON mínimo)
 const skills = ["HTML", "CSS", "JavaScript (básico)", "Python (básico)"];
-const API = "https://portafolio-back-end-vf4z.onrender.com/api";
+// Detectar si estamos en entorno local
+const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+// URLs de API
+const LOCAL_API = "http://localhost:4000/api";
+const PROD_API = "https://portafolio-back-end-vf4z.onrender.com/api";
+
+// Elegir base según el entorno
+const API = isLocal ? LOCAL_API : PROD_API;
+
 
 
 
 let projects = []; // ahora vacío
 let searchQuery = "";
+
+
 
 // Carga los proyectos desde el JSON
 
@@ -16,14 +27,15 @@ async function loadProjects() {
         const res = await fetch(`${API}/projects`);
         if (!res.ok) throw new Error("Error al cargar proyectos");
         projects = await res.json();
-        renderFilters();   // reconstruye la barra de filtros
-        renderProjects();  // muestra la grilla
+        renderFilters();
+        renderProjects();
     } catch (err) {
         console.error(err);
         document.getElementById("projects").innerHTML =
             `<div class="empty">Error cargando proyectos 😞</div>`;
     }
 }
+
 
 // === Filtros por tags ===
 const ALL = "Todos";
@@ -146,7 +158,6 @@ const statusEl = document.getElementById('formStatus');
 form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     statusEl.textContent = "Enviando…";
-
     try {
         const fd = new FormData(form);
         const payload = Object.fromEntries(fd);
@@ -161,18 +172,15 @@ form?.addEventListener('submit', async (e) => {
             }),
         });
 
-        if (res.ok) {
-            statusEl.textContent = "¡Gracias! Tu mensaje fue enviado ✅";
-            form.reset();
-            setTimeout(() => { statusEl.textContent = ""; modal?.close(); }, 900);
-        } else {
-            const info = await res.json().catch(() => null);
-            statusEl.textContent = info?.error || "No se pudo enviar. Probá más tarde.";
-        }
-    } catch {
-        statusEl.textContent = "Error de red. Verificá tu conexión.";
+        if (!res.ok) throw new Error("Error en envío");
+        statusEl.textContent = "¡Gracias! Tu mensaje fue enviado ✅";
+        form.reset();
+        setTimeout(() => { statusEl.textContent = ""; modal?.close(); }, 900);
+    } catch (e) {
+        statusEl.textContent = "No se pudo enviar. Intentá más tarde.";
     }
 });
+
 
 
 // 5) Footer dinámico (año actual)

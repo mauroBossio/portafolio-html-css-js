@@ -6,11 +6,9 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 
 app.use(cors({
-    origin: [
-        "http://localhost:5500",
-        "https://maurobossio.github.io"
-    ]
+    origin: ["http://localhost:5500", "https://maurobossio.github.io"]
 }));
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
