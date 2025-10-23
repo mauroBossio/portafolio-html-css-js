@@ -1,7 +1,7 @@
 
 // 1) Datos simples: array de skills y de proyectos (JSON mínimo)
 const skills = ["HTML", "CSS", "JavaScript (básico)", "Python (básico)"];
-const API = "http://localhost:4000/api";
+const API = "https://portafolio-back-end-vf4z.onrender.com/api";
 
 
 
