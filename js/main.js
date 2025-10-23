@@ -18,7 +18,6 @@ let projects = []; // ahora vacío
 let searchQuery = "";
 
 
-
 // Carga los proyectos desde el JSON
 
 
@@ -149,6 +148,8 @@ const contactLink = document.getElementById('contactLink');
 openBtn.addEventListener('click', () => modal.showModal());
 closeBtn.addEventListener('click', () => modal.close());
 contactLink.addEventListener('click', (e) => { e.preventDefault(); modal.showModal(); });
+document.getElementById('closeModal')?.addEventListener('click', () => modal.close());
+document.getElementById('closeModal2')?.addEventListener('click', () => modal.close());
 
 // 4) Manejo del envío (solo consola por ahora)
 const form = document.getElementById('contactForm');
@@ -201,6 +202,12 @@ function toggleBackToTop() {
     }
 }
 
+function setStatus(msg){
+  const el = document.getElementById('formStatus');
+  if (el) el.textContent = msg;
+  else console.log(msg);
+}
+
 backToTop?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
@@ -232,7 +239,7 @@ window.addEventListener("scroll", () => {
     lastScrollY = currentY;
 });
 
-
+setStatus("Enviando…");
 
 // Inicializamos todo
 renderSkills();
