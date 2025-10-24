@@ -4,10 +4,6 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
-app.use(cors({
-    origin: ["http://localhost:5500", "https://maurobossio.github.io"]
-}));
-
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +12,9 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // ===== Middlewares
+app.use(cors({
+    origin: ["http://localhost:5500", "https://maurobossio.github.io"]
+}));
 app.use(cors());            // permite requests desde tu front (http://localhost:5500)
 app.use(express.json());    // parsea JSON en req.body
 
