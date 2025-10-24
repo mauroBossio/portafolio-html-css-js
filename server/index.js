@@ -3,7 +3,6 @@ import cors from "cors";
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import cors from "cors";
 
 app.use(cors({
     origin: ["http://localhost:5500", "https://maurobossio.github.io"]
