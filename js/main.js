@@ -1,6 +1,13 @@
 
-// 1) Datos simples: array de skills y de proyectos (JSON mínimo)
+// Skills a mostrar, proximamente desde backend (Con un usuario de admin)
+
 const skills = ["HTML", "CSS", "JavaScript (básico)", "Python (básico)"];
+
+function renderSkills() {
+    const $skills = document.getElementById('skills');
+    $skills.innerHTML = skills.map(s => `<span class="pill">${s}</span>`).join('');
+}
+
 // Detectar si estamos en entorno local
 const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
 
@@ -12,14 +19,17 @@ const PROD_API = "https://portafolio-back-end-vf4z.onrender.com/api";
 const API = isLocal ? LOCAL_API : PROD_API;
 
 
-
-
-let projects = []; // ahora vacío
+let projects = [];
 let searchQuery = "";
 
 
-// Carga los proyectos desde el JSON
-
+// Carga los proyectos desde el JSON ubicado en el backend y luego los renderiza en el front
+// También maneja errores de carga mostrando un mensaje al usuario en lugar de los proyectos
+// Si la carga es exitosa, también llama a renderFilters() para inicializar los botones de filtro
+// antes de renderizar los proyectos en pantalla usando renderProjects(). 
+// Esta función es asíncrona y utiliza fetch para obtener los datos desde la API definida en la variable API
+// y actualiza el contenido del elemento con id "projects" en el DOM.
+// Maneja errores mostrando un mensaje adecuado al usuario en caso de fallo en la carga de datos.
 
 async function loadProjects() {
     try {
@@ -40,11 +50,27 @@ async function loadProjects() {
 const ALL = "Todos";
 let activeTag = ALL;
 
+
+// Obtiene todos los tags únicos de los proyectos, incluyendo una opción "Todos" al inicio
+// y los devuelve en un array. Utiliza flatMap para aplanar los arrays de tags de cada proyecto
+// y Set para eliminar duplicados.
+// Esta función es utilizada para renderizar los botones de filtro en la interfaz de usuario.
+// Devuelve un array de strings que representan los tags únicos de los proyectos.
+
 function getAllTags() {
-    // Une todos los arrays de tags y quita repetidos
     const tags = projects.flatMap(p => p.tags || []);
     return [ALL, ...Array.from(new Set(tags))];
 }
+
+
+// Renderiza los botones de filtro en el elemento con id "filters".
+// Utiliza la función getAllTags() para obtener los tags únicos y crea un botón por cada tag.
+// Añade la clase "active" al botón correspondiente al tag activo.
+// También añade listeners a cada botón para actualizar el tag activo y volver a renderizar
+// tanto los filtros como los proyectos cuando se hace clic en un botón.
+// Esta función es llamada inicialmente después de cargar los proyectos para configurar
+// los filtros en la interfaz de usuario.
+// Utiliza innerHTML para actualizar el contenido del contenedor de filtros en el DOM.
 
 function renderFilters() {
     const $filters = document.getElementById('filters');
@@ -56,17 +82,24 @@ function renderFilters() {
     </button>
   `).join('');
 
-    // Listeners por cada botón
     $filters.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             activeTag = btn.dataset.tag;
-            renderFilters();   // vuelve a pintar para actualizar "active"
-            renderProjects();  // muestra proyectos filtrados
+            renderFilters();
+            renderProjects();
         });
     });
 }
 
-// === Buscador por texto ===
+// === Buscador por texto ===//
+// Manejo del input y botón de limpiar normaliza el texto para comparaciones insensibles a mayúsculas y acentos
+// Actualiza la variable searchQuery y vuelve a renderizar los proyectos al cambiar el input
+// Limpia el input y el query al hacer clic en el botón de limpiar y vuelve a renderizar los proyectos
+// Utiliza un pequeño debounce para evitar re-renderizados excesivos
+// Escucha eventos 'input' en el campo de búsqueda y 'click' en el botón de limpiar
+// Actualiza el contenido del elemento con id "search" y "clearSearch" en el DOM
+
+
 const $search = document.getElementById('search');
 const $clearSearch = document.getElementById('clearSearch');
 
@@ -75,6 +108,15 @@ function normalize(txt) {
 }
 
 // (Opcional) pequeño debounce para no re-renderizar en cada tecla
+// solo después de que el usuario deja de tipear por 120ms
+// Utiliza setTimeout para implementar el debounce
+// y clearTimeout para cancelar llamadas anteriores si el usuario sigue escribiendo
+// antes de que pase el tiempo de espera.
+// Esta funcionalidad mejora la experiencia del usuario al permitir búsquedas
+// más eficientes y rápidas en la lista de proyectos.
+// No utiliza librerías externas, solo JavaScript nativo.
+// Maneja la normalización de texto para búsquedas más flexibles.
+
 let t;
 $search.addEventListener('input', () => {
     clearTimeout(t);
@@ -91,13 +133,11 @@ $clearSearch.addEventListener('click', () => {
     $search.focus();
 });
 
-
-
-// 2) Render simple de skills y proyectos
-function renderSkills() {
-    const $skills = document.getElementById('skills');
-    $skills.innerHTML = skills.map(s => `<span class="pill">${s}</span>`).join('');
-}
+// Renderiza los proyectos filtrados por el tag activo y la búsqueda por texto
+// Actualiza el contenido del elemento con id "projects" en el DOM
+// Filtra los proyectos primero por el tag activo y luego por el texto de búsqueda
+// Si no hay proyectos que coincidan con los filtros, muestra un mensaje adecuado
+// Utiliza innerHTML para actualizar el contenido del contenedor de proyectos en el DOM
 
 function renderProjects() {
     const $grid = document.getElementById('projects');
@@ -139,7 +179,17 @@ function renderProjects() {
 }
 
 
-// 3) Modal de contacto (nativo con <dialog>)
+// Modal de contacto (nativo con <dialog>)
+// Manejo de apertura y cierre del modal de contacto
+// Añade listeners a los botones y enlaces correspondientes
+// para abrir y cerrar el modal utilizando el elemento <dialog>.
+// Previene el comportamiento por defecto del enlace de contacto
+// para abrir el modal en su lugar.
+// Utiliza showModal() y close() del elemento <dialog> para manejar la visibilidad del modal.
+// Añade listeners a los elementos con id "openModal", "closeModal" y "contactLink" en el DOM.
+// También añade listeners a los botones de cierre dentro del modal para cerrarlo.
+
+
 const modal = document.getElementById('contactModal');
 const openBtn = document.getElementById('openModal');
 const closeBtn = document.getElementById('closeModal');
@@ -152,6 +202,19 @@ document.getElementById('closeModal')?.addEventListener('click', () => modal.clo
 document.getElementById('closeModal2')?.addEventListener('click', () => modal.close());
 
 // 4) Manejo del envío (solo consola por ahora)
+// Maneja el envío del formulario de contacto
+// Previene el comportamiento por defecto del formulario
+// Envía los datos del formulario a la API utilizando fetch
+// Muestra mensajes de estado al usuario durante el proceso de envío
+// Resetea el formulario y cierra el modal si el envío es exitoso
+// Muestra un mensaje de error si el envío falla
+// Utiliza el elemento con id "contactForm" para obtener los datos del formulario
+// y el elemento con id "formStatus" para mostrar mensajes de estado al usuario.
+// Utiliza JSON para enviar los datos al endpoint /contact de la API definida en la variable API.
+// Añade un listener al evento 'submit' del formulario.
+// Actualiza el contenido del DOM según el estado del envío.
+// Utiliza async/await para manejar la operación asíncrona de envío de datos.
+
 const form = document.getElementById('contactForm');
 const statusEl = document.getElementById('formStatus');
 
@@ -188,6 +251,15 @@ form?.addEventListener('submit', async (e) => {
 document.getElementById('year').textContent = new Date().getFullYear();
 
 // ====== Header auto-ocultable ======
+// Muestra u oculta el header según la dirección del scroll
+// Añade una sombra al header cuando hay scroll para mejorar la visibilidad
+// Utiliza la propiedad window.scrollY para detectar la posición del scroll
+// y compara la posición actual con la última posición conocida para determinar
+// si el usuario está scrolleando hacia arriba o hacia abajo.
+// Añade o quita las clases "hide" y "scrolled" al elemento <header> según corresponda.
+// Utiliza un listener en el evento 'scroll' de la ventana para manejar los cambios de scroll.
+// Actualiza las variables lastScrollY y header para mantener el estado del scroll y el elemento del DOM.
+
 const header = document.querySelector("header");
 let lastScrollY = window.scrollY;
 
@@ -202,10 +274,10 @@ function toggleBackToTop() {
     }
 }
 
-function setStatus(msg){
-  const el = document.getElementById('formStatus');
-  if (el) el.textContent = msg;
-  else console.log(msg);
+function setStatus(msg) {
+    const el = document.getElementById('formStatus');
+    if (el) el.textContent = msg;
+    else console.log(msg);
 }
 
 backToTop?.addEventListener('click', () => {
